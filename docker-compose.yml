@@ -18,7 +18,7 @@ services:
       DB_MYSQL_NAME: "npm"
     volumes:
       - nginx_data:/data
-      - nginx_letsencrypt:/etc/letsencrypt
+      - nginx_lentsencrypt:/etc/letsencrypt
     depends_on:
       - db
 
