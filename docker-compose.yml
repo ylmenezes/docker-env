@@ -17,8 +17,8 @@ services:
       DB_MYSQL_PASSWORD: "npm"
       DB_MYSQL_NAME: "npm"
     volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
+      - nginx_data:/data
+      - nginx_letsencrypt:/etc/letsencrypt
     depends_on:
       - db
 
@@ -34,7 +34,7 @@ services:
       MYSQL_USER: "npm"
       MYSQL_PASSWORD: "npm"
     volumes:
-      - ./mysql:/var/lib/mysql
+      - nginx_mysql:/var/lib/mysql
 
   portainer:
     image: portainer/portainer-ce:latest
