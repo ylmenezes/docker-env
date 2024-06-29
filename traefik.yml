@@ -1,0 +1,72 @@
+version: "3.8"
+
+services:
+  proxy:
+    image: traefik:latest
+    container_name: traefik-proxy
+    restart: always
+    command:
+      # - --api.insecure=true
+      - --api.dashboard=true
+      - --tracing.otlp=true
+      - --tracing.otlp.http=true
+      # - --tracing=true
+      - --tracing.addinternals
+      - --providers.swarm.endpoint=tcp://127.0.0.1:2377
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
+      - --providers.docker
+      - --entryPoints.web.address=:80
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.http.routers.proxy.rule=Host(`traefik.local`)
+      - traefik.http.routers.proxy.service=api@internal
+      - traefik.http.routers.proxy.entrypoints=web
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '2'
+          memory: '1G'
+        reservations:
+          cpus: '1'
+          memory: '512M'
+
+  whoami:
+    image: traefik/whoami:latest
+    container_name: traefik-whoami
+    networks:
+      - proxy
+    labels:
+      - traefik.http.routers.whoami.rule=Host(`whoami.local`)
+      - traefik.http.routers.whoami.entrypoints=web
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1'
+          memory: '200M'
+        reservations:
+          cpus: '1'
+          memory: '100M'
+
+networks:
+  proxy:
+    external: true
+    name: proxy

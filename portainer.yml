@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    networks:
+      - proxy
+    volumes:
+      - portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.routers.portainer.rule=Host(`portainer.local`)
+      - traefik.http.routers.portainer.entrypoints=web
+      - traefik.http.routers.portainer.priority=1
+      - traefik.http.routers.portainer.service=portainer
+      - traefik.http.services.portainer.loadbalancer.server.port=9000
+      
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1'
+          memory: '1G'
+        reservations:
+          cpus: '1'
+          memory: '128M'
+volumes:
+  portainer_data:
+    external: true
+    name: portainer_data
+  
+networks:
+  proxy:
+    external: true
+    attachable: true
+    name: proxy
