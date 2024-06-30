@@ -35,13 +35,13 @@ services:
         - traefik.http.routers.http-catchall.entrypoints=web
         - traefik.http.routers.http-catchall.middlewares=redirect-https@docker
         - traefik.http.routers.http-catchall.priority=1
-        - traefik.http.routers.traefik.rule=Host(`traefik.cw.srv.br`)
-        - traefik.http.routers.traefik.entrypoints=websecure
-        - traefik.http.routers.traefik.service=api@internal
-        - traefik.http.routers.traefik.tls=true
-        - traefik.http.routers.traefik.tls.certresolver=letsencryptresolver
-        - traefik.http.services.traefik.loadbalancer.server.port=8080
-
+        # Traefik dashboard
+        - traefik.http.routers.traefik-api.rule=Host(`traefik.cw.srv.br`)
+        - traefik.http.routers.traefik-api.service=api@internal
+        - traefik.http.routers.traefik-api.entrypoints=websecure
+        - traefik.http.routers.traefik-api.priority=1
+        - traefik.http.routers.traefik-api.tls=true
+        - traefik.http.routers.traefik-api.tls.certresolver=letsencryptresolver
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - le_certificates:/etc/traefik/letsencrypt
