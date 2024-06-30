@@ -35,9 +35,6 @@ services:
         - traefik.http.routers.http-catchall.entrypoints=web
         - traefik.http.routers.http-catchall.middlewares=redirect-https@docker
         - traefik.http.routers.http-catchall.priority=1
-        - traefik.http.routers.traefik.rule=Host(`traefik.local`)
-        - traefik.http.routers.traefik.service=api@internal
-        - traefik.http.routers.traefik.entrypoints=websecure
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - le_certificates:/etc/traefik/letsencrypt
