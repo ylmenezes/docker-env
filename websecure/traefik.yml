@@ -5,7 +5,6 @@ services:
     image: traefik:latest
     command:
       - --api.dashboard=true
-      - --providers.docker.swarmMode=true
       - --providers.swarm.endpoint=tcp://127.0.0.1:2377
       - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --providers.docker.exposedbydefault=false
