@@ -1,24 +1,17 @@
-version: "3.8"
+version: "3.7"
 
 services:
   proxy:
-    image: traefik:latest
+    image: traefik:v2.11.5
     container_name: traefik-proxy
     restart: always
     command:
       # - --api.insecure=true
       - --api.dashboard=true
-      - --tracing.otlp=true
-      - --tracing.otlp.http=true
-      # - --tracing=true
-      - --tracing.addinternals
-      - --providers.swarm.endpoint=tcp://127.0.0.1:2377
-      - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --providers.docker
+      # - --tracing=true
+      - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --entryPoints.web.address=:80
-      - --entrypoints.web.http.redirections.entryPoint.to=websecure
-      - --entrypoints.web.http.redirections.entryPoint.scheme=https
-      - --entrypoints.web.http.redirections.entrypoint.permanent=true
     networks:
       - proxy
     ports:
