@@ -37,7 +37,9 @@ services:
         - traefik.http.routers.http-catchall.priority=1
         - traefik.http.routers.traefik.rule=Host(`traefik.cw.srv.br`)
         - traefik.http.routers.traefik.service=api@internal
-        - traefik.http.routers.traefik.entrypoints=websecure
+        - traefik.http.routers.traefik.entrypoints=web
+        - traefik.http.services.traefik.loadbalancer.server.port=8080
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - le_certificates:/etc/traefik/letsencrypt
