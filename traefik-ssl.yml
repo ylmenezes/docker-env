@@ -7,6 +7,7 @@ services:
     command:
       - --api.dashboard=true
       - --providers.docker.swarmMode=true
+      - --providers.swarm.endpoint=tcp://127.0.0.1:2377
       - --providers.docker.endpoint=unix:///var/run/docker.sock
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=proxy
@@ -37,8 +38,8 @@ services:
         - traefik.http.routers.http-catchall.middlewares=redirect-https@docker
         - traefik.http.routers.http-catchall.priority=1
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "le_certificates:/etc/traefik/letsencrypt"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - le_certificates:/etc/traefik/letsencrypt
     ports:
       - target: 80
         published: 80
