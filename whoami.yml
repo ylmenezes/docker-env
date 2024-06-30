@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  whoami:
+    image: traefik/whoami:latest
+    container_name: traefik-whoami
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.routers.whoami.rule=Host(`whoami.cw.srv.br`)
+      - traefik.http.routers.whoami.entrypoints=websecure
+      - traefik.http.routers.whoami.priority=1
+      - traefik.http.routers.whoami.tls=true
+      - traefik.http.routers.whoami.tls.certresolver=letsencryptresolver
+      - traefik.http.routers.whoami.service=whoami
+      - traefik.http.services.whoami.loadbalancer.server.port=80
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      resources:
+        limits:
+          cpus: '1'
+          memory: '200M'
+        reservations:
+          cpus: '1'
+          memory: '100M'
+
+networks:
+  proxy:
+    external: true
+    name: proxy
