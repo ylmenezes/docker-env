@@ -50,7 +50,7 @@ services:
       - proxy
 
 volumes:
-  letsencrypt:
+  le_certificates:
     external: true
     name: le_certificates
 
